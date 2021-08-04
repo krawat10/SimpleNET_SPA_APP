@@ -1,0 +1,90 @@
+<div class="row">
+  <form (ngSubmit)="onSubmit()" [formGroup]="calculatorForm">
+    <div class="form-row">
+
+      <div class="form-group col-md-5">
+        <label class="sr-only" for="amount">Loan Amount</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            formControlName="amount"
+            placeholder="$300,000"
+            id="amount">
+          <div class="input-group-prepend">
+            <div class="input-group-text">USD</div>
+          </div>
+        </div>
+
+        <small
+          *ngIf="!calculatorForm.get('amount').valid && calculatorForm.get('amount').touched"
+          class="form-text text-muted">
+              <span *ngIf="calculatorForm.get('amount').errors['required']">
+                Loan amount is required
+              </span>
+          <span *ngIf="calculatorForm.get('amount').errors['min']">
+                Loan amount is to low
+          </span>
+          <span *ngIf="calculatorForm.get('amount').errors['max']">
+                Loan amount is to high
+          </span>
+        </small>
+      </div>
+
+      <div class="form-group col-md-4">
+        <label class="sr-only" for="period">Period</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            formControlName="period"
+            id="period"
+            placeholder="5"
+            type="number">
+          <div class="input-group-prepend">
+            <div class="input-group-text">Years</div>
+          </div>
+        </div>
+        <div
+          *ngIf="!calculatorForm.get('period').valid && calculatorForm.get('period').touched"
+          class="form-text text-muted">
+              <small *ngIf="calculatorForm.get('period').errors['required']">
+                Time period is required
+              </small>
+              <small *ngIf="calculatorForm.get('period').errors['min']">
+                Time period to low
+              </small>
+              <small *ngIf="calculatorForm.get('period').errors['max']">
+                Time period to high
+              </small>
+        </div>
+      </div>
+      <div class="form-group col-md-3">
+        <div class="form-row">
+          <button class="btn btn-primary" [disabled]="!calculatorForm.valid" type="submit">Submit</button>
+        </div>
+
+        <small
+          *ngIf="!calculatorForm.valid && calculatorForm.touched"
+          class="text-muted">Please enter a valid data
+        </small>
+      </div>
+    </div>
+  </form>
+
+
+</div>
+<br>
+
+<div class="row" *ngIf="offers.length > 0">
+  <h2> {{calculatorForm.get('amount').value}} Mortgage Loans for {{calculatorForm.get('period').value}} years: </h2>
+  <div class="list-group list-group-horizontal-lg" *ngIf="!loadingOffers">
+    <div *ngFor="let offer of offers">
+      <app-loan-calculator-offer [offer]="offer"></app-loan-calculator-offer>
+    </div>
+  </div>
+  <div>
+    <sa-spinner-round [enabled]="loadingOffers"></sa-spinner-round>
+  </div>
+
+
+</div>
+
